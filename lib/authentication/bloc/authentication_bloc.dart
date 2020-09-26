@@ -4,9 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:shop_bloc/repository/repository.dart';
 
 import '../authentication.dart';
-import '../authentication_repository.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -30,10 +30,11 @@ class AuthenticationBloc
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
+    print(']-----] AuthenticationBloc::mapEventToState.event [-----[ ${event}');
     if (event is AuthenticationStatusChanged) {
       yield await _mapAuthenticationStatusChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
-      _authenticationRepository.signOut();
+      unawaited(_authenticationRepository.signOut());
     }
   }
 
@@ -47,6 +48,8 @@ class AuthenticationBloc
   Future<AuthenticationState> _mapAuthenticationStatusChangedToState(
     AuthenticationStatusChanged event,
   ) async {
+    print(
+        ']-----] AuthenticationBloc::_mapAuthenticationStatusChangedToState.status [-----[ ${event.status}');
     switch (event.status) {
       case AuthenticationStatus.unauthenticated:
         return const AuthenticationState.unauthenticated();
@@ -62,8 +65,8 @@ class AuthenticationBloc
 
   Future<User> _tryGetUser() async {
     try {
-      // final user = await _userRepository.getUser();
-      return null;
+      final user = User.empty;
+      return user;
     } on Exception {
       return null;
     }

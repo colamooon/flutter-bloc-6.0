@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:shop_bloc/authentication/authentication.dart';
+import 'package:shop_bloc/repository/repository.dart';
+
+import '../../authentication/models/models.dart';
 
 part 'sign_up_state.dart';
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_bloc/support/dioclient/dio_client.dart';
 
 class SignInFailure implements Exception {}
 
@@ -10,8 +11,10 @@ class SignOutFailure implements Exception {}
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
-  final _controller = StreamController<AuthenticationStatus>();
+  final DioClient _dioClient;
+  AuthenticationRepository(this._dioClient) : assert(_dioClient != null);
 
+  final _controller = StreamController<AuthenticationStatus>();
   Stream<AuthenticationStatus> get status async* {
     await Future<void>.delayed(const Duration(seconds: 1));
     yield AuthenticationStatus.unauthenticated;
@@ -22,6 +25,7 @@ class AuthenticationRepository {
     @required String token,
   }) async {
     assert(token != null);
+    print(']-----] AuthenticationRepository::signIn [-----[ ${token}');
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('accessTokenCola', token);
@@ -34,7 +38,7 @@ class AuthenticationRepository {
     }
   }
 
-  void signOut() async {
+  Future<void> signOut() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('accessTokenCola');

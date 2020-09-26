@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shop_bloc/authentication/authentication.dart';
+import 'package:shop_bloc/repository/repository.dart';
 
 import '../sign_up.dart';
 

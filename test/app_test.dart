@@ -1,12 +1,15 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:dio/dio.dart';
 import 'package:shop_bloc/app.dart';
 import 'package:shop_bloc/authentication/authentication.dart';
 import 'package:shop_bloc/home/home.dart';
 import 'package:shop_bloc/login/login.dart';
+import 'package:shop_bloc/repository/repository.dart';
 import 'package:shop_bloc/splash/splash.dart';
+import 'package:shop_bloc/support/dioclient/dio_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
@@ -38,12 +41,20 @@ void main() {
     });
 
     test('throws AssertionError when authenticationRepository is null', () {
-      expect(() => App(authenticationRepository: null), throwsAssertionError);
+      expect(
+          () => App(
+                authenticationRepository: null,
+                dioClient: null,
+              ),
+          throwsAssertionError);
     });
 
     testWidgets('renders AppView', (tester) async {
       await tester.pumpWidget(
-        App(authenticationRepository: authenticationRepository),
+        App(
+          authenticationRepository: authenticationRepository,
+          dioClient: DioClient(Dio()),
+        ),
       );
       expect(find.byType(AppView), findsOneWidget);
     });
